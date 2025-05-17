@@ -11,18 +11,23 @@ function App() {
   const [error, setError] = useState(null);
 
   const askQuestion = async () => {
-    setError(null);
-    setAnswer(null);
-    setSql('');
+  setError(null);
+  setAnswer(null);
+  setSql('');
 
-    try {
-      const response = await axios.post('http://localhost:5000/ask', { question });
-      setSql(response.data.sql);
-      setAnswer(response.data.results);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to get answer');
-    }
-  };
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL}/ask`,
+      { query: question }
+    );
+
+    setSql(response.data.sql);
+    setAnswer(response.data.results);
+  } catch (err) {
+    setError(err.response?.data?.error || 'Failed to get answer');
+  }
+};
+
 
   const renderTable = () => {
     if (!answer || answer.length === 0) return <p>No data returned.</p>;
